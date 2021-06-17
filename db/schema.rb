@@ -10,10 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_17_144621) do
+ActiveRecord::Schema.define(version: 2021_06_17_150223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bookings", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "rental_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rental_id"], name: "index_bookings_on_rental_id"
+    t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "rentals", force: :cascade do |t|
+    t.bigint "restaurant_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer "price_per_day"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_rentals_on_restaurant_id"
+  end
+
+  create_table "restaurants", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name"
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_restaurants_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -27,4 +57,8 @@ ActiveRecord::Schema.define(version: 2021_06_17_144621) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "bookings", "rentals"
+  add_foreign_key "bookings", "users"
+  add_foreign_key "rentals", "restaurants"
+  add_foreign_key "restaurants", "users"
 end
