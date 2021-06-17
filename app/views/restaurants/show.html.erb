@@ -18,8 +18,12 @@
 <%= link_to 'Edit', edit_restaurant_path(@restaurant) %> |
 <%= link_to 'Back', restaurants_path %>
 
-<div class="container">
-  <%= week_calendar(number_of_days: @rental.number_of_day) do |date| %>
-    <%= date.strftime("%d/%m/%Y") %>
+<div class="container mb-5 text-center">
+  <%= month_calendar(number_of_days: @rental.number_of_day) do |date| %>
+    <span class="<%= (@rental.start_date <= date) && (date <= @rental.end_date) ? 'active' : '' %>"><%= date.strftime("%d/%m/%Y") %></span>
+    <% if (@rental.start_date <= date) && (date <= @rental.end_date) %>
+      <br>
+     <%= link_to 'Book', root_path, class: "btn btn-primary mt-3" %>
+    <% end %>
   <% end %>
 </div>
